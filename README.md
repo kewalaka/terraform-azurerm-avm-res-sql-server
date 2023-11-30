@@ -29,6 +29,7 @@ The following providers are used by this module:
 The following resources are used by this module:
 
 - [azurerm_management_lock.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/management_lock) (resource)
+- [azurerm_mssql_elasticpool.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mssql_elasticpool) (resource)
 - [azurerm_mssql_server.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mssql_server) (resource)
 - [azurerm_private_endpoint.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_endpoint) (resource)
 - [azurerm_private_endpoint_application_security_group_association.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_endpoint_application_security_group_association) (resource)
@@ -78,14 +79,14 @@ Type:
 
 ```hcl
 object({
-    login_username              = optional(string)
-    object_id                   = optional(string)
+    login_username              = optional(string, null)
+    object_id                   = optional(string, null)
     tenant_id                   = optional(string)
     azuread_authentication_only = optional(bool)
   })
 ```
 
-Default: `{}`
+Default: `null`
 
 ### <a name="input_connection_policy"></a> [connection\_policy](#input\_connection\_policy)
 
@@ -141,6 +142,36 @@ map(object({
     event_hub_authorization_rule_resource_id = optional(string, null)
     event_hub_name                           = optional(string, null)
     marketplace_partner_resource_id          = optional(string, null)
+  }))
+```
+
+Default: `{}`
+
+### <a name="input_elastic_pools"></a> [elastic\_pools](#input\_elastic\_pools)
+
+Description: Map of elastic pools configurations.
+
+Type:
+
+```hcl
+map(object({
+    sku = object({
+      name     = string
+      capacity = number
+      tier     = string
+      family   = optional(string)
+    })
+    per_database_settings = object({
+      min_capacity = number
+      max_capacity = number
+    })
+    maintenance_configuration_name = optional(string, "SQL_Default")
+    zone_redundant = optional(object({
+      enabled    = optional(bool)
+      tier_check = optional(bool)
+    }))
+    license_type = optional(string)
+    max_size_gb  = optional(number)
   }))
 ```
 
