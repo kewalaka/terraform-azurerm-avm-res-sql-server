@@ -1,20 +1,7 @@
 <!-- BEGIN_TF_DOCS -->
 # terraform-azurerm-avm-template
 
-This is a template repo for Terraform Azure Verified Modules.
-
-Things to do:
-
-1. Set up a GitHub repo environment called `test`.
-1. Configure environment protection rule to ensure that approval is required before deploying to this environment.
-1. Create a user-assigned managed identity in your test subscription.
-1. Create a role assignment for the managed identity on your test subscription, use the minimum required role.
-1. Configure federated identity credentials on the user assigned managed identity. Use the GitHub environment.
-1. Create the following environment secrets on the `test` environment:
-   1. AZURE\_CLIENT\_ID
-   1. AZURE\_TENANT\_ID
-   1. AZURE\_SUBSCRIPTION\_ID
-1. Search and update TODOs within the code and remove the TODO comments once complete.
+This is a resource module repo for SQL Server on Azure.
 
 Major version Zero (0.y.z) is for initial development. Anything MAY change at any time. A module SHOULD NOT be considered stable till at least it is major version one (1.0.0) or greater. Changes will always be via new versions being published and no changes will be made to existing published versions. For more details please go to <https://semver.org/>
 
@@ -41,8 +28,8 @@ The following providers are used by this module:
 
 The following resources are used by this module:
 
-- [azurerm_TODO_the_resource_for_this_module.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/TODO_the_resource_for_this_module) (resource)
 - [azurerm_management_lock.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/management_lock) (resource)
+- [azurerm_mssql_server.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mssql_server) (resource)
 - [azurerm_private_endpoint.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_endpoint) (resource)
 - [azurerm_private_endpoint_application_security_group_association.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_endpoint_application_security_group_association) (resource)
 - [azurerm_resource_group_template_deployment.telemetry](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group_template_deployment) (resource)
@@ -54,6 +41,18 @@ The following resources are used by this module:
 ## Required Inputs
 
 The following input variables are required:
+
+### <a name="input_administrator_login"></a> [administrator\_login](#input\_administrator\_login)
+
+Description: n/a
+
+Type: `any`
+
+### <a name="input_administrator_login_password"></a> [administrator\_login\_password](#input\_administrator\_login\_password)
+
+Description: n/a
+
+Type: `any`
 
 ### <a name="input_name"></a> [name](#input\_name)
 
@@ -71,6 +70,82 @@ Type: `string`
 
 The following input variables are optional (have default values):
 
+### <a name="input_azuread_administrator"></a> [azuread\_administrator](#input\_azuread\_administrator)
+
+Description: Azure AD Administrator Configuration
+
+Type:
+
+```hcl
+object({
+    login_username              = optional(string)
+    object_id                   = optional(string)
+    tenant_id                   = optional(string)
+    azuread_authentication_only = optional(bool)
+  })
+```
+
+Default: `{}`
+
+### <a name="input_connection_policy"></a> [connection\_policy](#input\_connection\_policy)
+
+Description: n/a
+
+Type: `string`
+
+Default: `"Default"`
+
+### <a name="input_customer_managed_key"></a> [customer\_managed\_key](#input\_customer\_managed\_key)
+
+Description: required AVM interfaces remove only if not supported by the resource
+
+Type:
+
+```hcl
+object({
+    key_vault_resource_id              = optional(string)
+    key_name                           = optional(string)
+    key_version                        = optional(string, null)
+    user_assigned_identity_resource_id = optional(string, null)
+  })
+```
+
+Default: `{}`
+
+### <a name="input_diagnostic_settings"></a> [diagnostic\_settings](#input\_diagnostic\_settings)
+
+Description:   A map of diagnostic settings to create on the Key Vault. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
+
+  - `name` - (Optional) The name of the diagnostic setting. One will be generated if not set, however this will not be unique if you want to create multiple diagnostic setting resources.
+  - `log_categories` - (Optional) A set of log categories to send to the log analytics workspace. Defaults to `[]`.
+  - `log_groups` - (Optional) A set of log groups to send to the log analytics workspace. Defaults to `["allLogs"]`.
+  - `metric_categories` - (Optional) A set of metric categories to send to the log analytics workspace. Defaults to `["AllMetrics"]`.
+  - `log_analytics_destination_type` - (Optional) The destination type for the diagnostic setting. Possible values are `Dedicated` and `AzureDiagnostics`. Defaults to `Dedicated`.
+  - `workspace_resource_id` - (Optional) The resource ID of the log analytics workspace to send logs and metrics to.
+  - `storage_account_resource_id` - (Optional) The resource ID of the storage account to send logs and metrics to.
+  - `event_hub_authorization_rule_resource_id` - (Optional) The resource ID of the event hub authorization rule to send logs and metrics to.
+  - `event_hub_name` - (Optional) The name of the event hub. If none is specified, the default event hub will be selected.
+  - `marketplace_partner_resource_id` - (Optional) The full ARM resource ID of the Marketplace resource to which you would like to send Diagnostic LogsLogs.
+
+Type:
+
+```hcl
+map(object({
+    name                                     = optional(string, null)
+    log_categories                           = optional(set(string), [])
+    log_groups                               = optional(set(string), ["allLogs"])
+    metric_categories                        = optional(set(string), ["AllMetrics"])
+    log_analytics_destination_type           = optional(string, "Dedicated")
+    workspace_resource_id                    = optional(string, null)
+    storage_account_resource_id              = optional(string, null)
+    event_hub_authorization_rule_resource_id = optional(string, null)
+    event_hub_name                           = optional(string, null)
+    marketplace_partner_resource_id          = optional(string, null)
+  }))
+```
+
+Default: `{}`
+
 ### <a name="input_enable_telemetry"></a> [enable\_telemetry](#input\_enable\_telemetry)
 
 Description: This variable controls whether or not telemetry is enabled for the module.  
@@ -79,7 +154,7 @@ If it is set to false, then no telemetry will be collected.
 
 Type: `bool`
 
-Default: `true`
+Default: `false`
 
 ### <a name="input_location"></a> [location](#input\_location)
 
@@ -103,6 +178,37 @@ object({
 ```
 
 Default: `{}`
+
+### <a name="input_managed_identities"></a> [managed\_identities](#input\_managed\_identities)
+
+Description: n/a
+
+Type:
+
+```hcl
+object({
+    system_assigned            = optional(bool, false)
+    user_assigned_resource_ids = optional(set(string), [])
+  })
+```
+
+Default: `{}`
+
+### <a name="input_outbound_network_restriction_enabled"></a> [outbound\_network\_restriction\_enabled](#input\_outbound\_network\_restriction\_enabled)
+
+Description: n/a
+
+Type: `bool`
+
+Default: `true`
+
+### <a name="input_primary_user_assigned_identity_id"></a> [primary\_user\_assigned\_identity\_id](#input\_primary\_user\_assigned\_identity\_id)
+
+Description: n/a
+
+Type: `any`
+
+Default: `null`
 
 ### <a name="input_private_endpoints"></a> [private\_endpoints](#input\_private\_endpoints)
 
@@ -160,6 +266,14 @@ map(object({
 
 Default: `{}`
 
+### <a name="input_public_network_access_enabled"></a> [public\_network\_access\_enabled](#input\_public\_network\_access\_enabled)
+
+Description: n/a
+
+Type: `bool`
+
+Default: `false`
+
 ### <a name="input_role_assignments"></a> [role\_assignments](#input\_role\_assignments)
 
 Description: A map of role assignments to create on this resource. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
@@ -188,6 +302,30 @@ map(object({
 ```
 
 Default: `{}`
+
+### <a name="input_server_version"></a> [server\_version](#input\_server\_version)
+
+Description: The version for the server. Valid values are: 2.0 (for v11 server) and 12.0 (for v12 server). Changing this forces a new resource to be created.
+
+Type: `string`
+
+Default: `"12.0"`
+
+### <a name="input_tags"></a> [tags](#input\_tags)
+
+Description: n/a
+
+Type: `map(any)`
+
+Default: `{}`
+
+### <a name="input_transparent_data_encryption_key_vault_key_id"></a> [transparent\_data\_encryption\_key\_vault\_key\_id](#input\_transparent\_data\_encryption\_key\_vault\_key\_id)
+
+Description: n/a
+
+Type: `any`
+
+Default: `null`
 
 ## Outputs
 
