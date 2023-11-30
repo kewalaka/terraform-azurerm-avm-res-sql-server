@@ -31,15 +31,17 @@ variable "name" {
 
 // required AVM interfaces 
 // remove only if not supported by the resource
-variable "customer_managed_key" {
-  type = object({
-    key_vault_resource_id              = optional(string)
-    key_name                           = optional(string)
-    key_version                        = optional(string, null)
-    user_assigned_identity_resource_id = optional(string, null)
-  })
-  default = {}
-}
+
+# Need to add this one back later when looking at TDE with BYO keys
+# variable "customer_managed_key" {
+#   type = object({
+#     key_vault_resource_id              = optional(string)
+#     key_name                           = optional(string)
+#     key_version                        = optional(string, null)
+#     user_assigned_identity_resource_id = optional(string, null)
+#   })
+#   default = {}
+# }
 
 variable "diagnostic_settings" {
   type = map(object({
