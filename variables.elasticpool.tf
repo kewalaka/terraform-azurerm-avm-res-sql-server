@@ -13,12 +13,9 @@ variable "elastic_pools" {
       max_capacity = number
     })
     maintenance_configuration_name = optional(string, "SQL_Default")
-    zone_redundant = optional(object({
-      enabled    = optional(bool)
-      tier_check = optional(bool)
-    }))
-    license_type = optional(string)
-    max_size_gb  = optional(number)
+    zone_redundant                 = optional(bool, "true")
+    license_type                   = optional(string)
+    max_size_gb                    = optional(number)
   }))
 
   validation {
@@ -76,8 +73,7 @@ variable "elastic_pools" {
   validation {
     condition = can(
       [for pool, config in var.elastic_pools :
-        (config.zone_redundant == null) ||
-        ((config.sku.tier == "Premium" || config.sku.tier == "BusinessCritical") && config.zone_redundant.enabled != null && config.zone_redundant.tier_check != null)
+        config.zone_redundant == null || !config.zone_redundant || (config.sku.tier == "Premium" || config.sku.tier == "BusinessCritical") && config.zone_redundant
       ]
     )
     error_message = "Invalid combination of 'zone_redundant' setting in the elastic_pools variable."

@@ -57,12 +57,9 @@ locals {
         max_capacity = 50
       }
       maintenance_configuration_name = "SQL_Default"
-      zone_redundant = {
-        enabled    = true
-        tier_check = true
-      }
-      license_type = "LicenseIncluded"
-      max_size_gb  = 32
+      zone_redundant                 = false
+      license_type                   = "LicenseIncluded"
+      max_size_gb                    = 32
     }
   }
 }

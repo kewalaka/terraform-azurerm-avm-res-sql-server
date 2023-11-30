@@ -166,12 +166,9 @@ map(object({
       max_capacity = number
     })
     maintenance_configuration_name = optional(string, "SQL_Default")
-    zone_redundant = optional(object({
-      enabled    = optional(bool)
-      tier_check = optional(bool)
-    }))
-    license_type = optional(string)
-    max_size_gb  = optional(number)
+    zone_redundant                 = optional(bool, "true")
+    license_type                   = optional(string)
+    max_size_gb                    = optional(number)
   }))
 ```
 
