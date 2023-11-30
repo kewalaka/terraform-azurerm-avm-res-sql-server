@@ -29,6 +29,7 @@ The following providers are used by this module:
 The following resources are used by this module:
 
 - [azurerm_management_lock.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/management_lock) (resource)
+- [azurerm_mssql_elasticpool.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mssql_elasticpool) (resource)
 - [azurerm_mssql_server.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mssql_server) (resource)
 - [azurerm_private_endpoint.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_endpoint) (resource)
 - [azurerm_private_endpoint_application_security_group_association.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_endpoint_application_security_group_association) (resource)
@@ -46,13 +47,13 @@ The following input variables are required:
 
 Description: n/a
 
-Type: `any`
+Type: `string`
 
 ### <a name="input_administrator_login_password"></a> [administrator\_login\_password](#input\_administrator\_login\_password)
 
 Description: n/a
 
-Type: `any`
+Type: `string`
 
 ### <a name="input_name"></a> [name](#input\_name)
 
@@ -78,14 +79,14 @@ Type:
 
 ```hcl
 object({
-    login_username              = optional(string)
-    object_id                   = optional(string)
+    login_username              = optional(string, null)
+    object_id                   = optional(string, null)
     tenant_id                   = optional(string)
     azuread_authentication_only = optional(bool)
   })
 ```
 
-Default: `{}`
+Default: `null`
 
 ### <a name="input_connection_policy"></a> [connection\_policy](#input\_connection\_policy)
 
@@ -94,23 +95,6 @@ Description: n/a
 Type: `string`
 
 Default: `"Default"`
-
-### <a name="input_customer_managed_key"></a> [customer\_managed\_key](#input\_customer\_managed\_key)
-
-Description: required AVM interfaces remove only if not supported by the resource
-
-Type:
-
-```hcl
-object({
-    key_vault_resource_id              = optional(string)
-    key_name                           = optional(string)
-    key_version                        = optional(string, null)
-    user_assigned_identity_resource_id = optional(string, null)
-  })
-```
-
-Default: `{}`
 
 ### <a name="input_diagnostic_settings"></a> [diagnostic\_settings](#input\_diagnostic\_settings)
 
@@ -141,6 +125,33 @@ map(object({
     event_hub_authorization_rule_resource_id = optional(string, null)
     event_hub_name                           = optional(string, null)
     marketplace_partner_resource_id          = optional(string, null)
+  }))
+```
+
+Default: `{}`
+
+### <a name="input_elastic_pools"></a> [elastic\_pools](#input\_elastic\_pools)
+
+Description: Map of elastic pools configurations.
+
+Type:
+
+```hcl
+map(object({
+    sku = object({
+      name     = string
+      capacity = number
+      tier     = string
+      family   = optional(string)
+    })
+    per_database_settings = object({
+      min_capacity = number
+      max_capacity = number
+    })
+    maintenance_configuration_name = optional(string, "SQL_Default")
+    zone_redundant                 = optional(bool, "true")
+    license_type                   = optional(string)
+    max_size_gb                    = optional(number)
   }))
 ```
 
@@ -198,7 +209,7 @@ Default: `{}`
 
 Description: n/a
 
-Type: `bool`
+Type: `string`
 
 Default: `true`
 
@@ -206,7 +217,7 @@ Default: `true`
 
 Description: n/a
 
-Type: `any`
+Type: `string`
 
 Default: `null`
 
@@ -323,7 +334,7 @@ Default: `{}`
 
 Description: n/a
 
-Type: `any`
+Type: `string`
 
 Default: `null`
 
