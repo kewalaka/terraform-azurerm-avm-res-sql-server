@@ -53,7 +53,7 @@ locals {
         tier     = "Standard"
       }
       per_database_settings = {
-        min_capacity = 5
+        min_capacity = 50
         max_capacity = 50
       }
       maintenance_configuration_name = "SQL_Default"
