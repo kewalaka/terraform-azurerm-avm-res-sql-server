@@ -1,12 +1,8 @@
 locals {
   # This is the unique id AVM Terraform modules that is supplied by the AVM team.
   # See https://azure.github.io/Azure-Verified-Modules/specs/shared/#id-sfr3---category-telemetry---deploymentusage-telemetry
-  telem_puid = "46d3xgtf"
-
-  # TODO: change this to the name of the module. See https://azure.github.io/Azure-Verified-Modules/specs/shared/#id-sfr3---category-telemetry---deploymentusage-telemetry
-  module_name = "CHANGEME"
-
-  # TODO: Change this. Should be either `res` or `ptn`
+  telem_puid  = "46d3xgtf"
+  module_name = "sql-server"
   module_type = "res"
 
   # This ensures we don't get errors if telemetry is disabled.
