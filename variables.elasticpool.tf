@@ -91,7 +91,7 @@ variable "elastic_pools" {
   validation {
     condition = can(
       [for pool, config in var.elastic_pools :
-        (config.max_size_gb == null) || (config.max_size_gb >= 0)
+        (config.max_size_gb == null) || (config.max_size_gb >= 50)
       ]
     )
     error_message = "Invalid value for 'max_size_gb' in the elastic_pools variable. Must be null or a non-negative number."

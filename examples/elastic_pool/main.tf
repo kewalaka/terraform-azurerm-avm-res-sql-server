@@ -59,7 +59,7 @@ locals {
       maintenance_configuration_name = "SQL_Default"
       zone_redundant                 = false
       license_type                   = "LicenseIncluded"
-      max_size_gb                    = 32
+      max_size_gb                    = 50
     }
   }
 }

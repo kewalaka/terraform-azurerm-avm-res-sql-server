@@ -47,13 +47,13 @@ The following input variables are required:
 
 Description: n/a
 
-Type: `any`
+Type: `string`
 
 ### <a name="input_administrator_login_password"></a> [administrator\_login\_password](#input\_administrator\_login\_password)
 
 Description: n/a
 
-Type: `any`
+Type: `string`
 
 ### <a name="input_name"></a> [name](#input\_name)
 
@@ -226,7 +226,7 @@ Default: `{}`
 
 Description: n/a
 
-Type: `bool`
+Type: `string`
 
 Default: `true`
 
@@ -234,7 +234,7 @@ Default: `true`
 
 Description: n/a
 
-Type: `any`
+Type: `string`
 
 Default: `null`
 
@@ -351,7 +351,7 @@ Default: `{}`
 
 Description: n/a
 
-Type: `any`
+Type: `string`
 
 Default: `null`
 
