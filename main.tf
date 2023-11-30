@@ -19,7 +19,7 @@ resource "azurerm_mssql_server" "this" {
   transparent_data_encryption_key_vault_key_id = var.transparent_data_encryption_key_vault_key_id
 
   dynamic "identity" {
-    for_each = var.managed_identities == {} ? [] : [var.managed_identities]
+    for_each = var.managed_identities != null ? { this = var.managed_identities } : {}
     content {
       type         = identity.value.system_assigned && length(identity.value.user_assigned_resource_ids) > 0 ? "SystemAssigned, UserAssigned" : length(identity.value.user_assigned_resource_ids) > 0 ? "UserAssigned" : "SystemAssigned"
       identity_ids = identity.value.user_assigned_resource_ids
@@ -27,7 +27,7 @@ resource "azurerm_mssql_server" "this" {
   }
 
   dynamic "azuread_administrator" {
-    for_each = var.azuread_administrator == {} ? [] : [var.azuread_administrator]
+    for_each = var.azuread_administrator != null ? { this = var.azuread_administrator } : {}
     content {
       login_username              = azuread_administrator.value.login_username
       object_id                   = azuread_administrator.value.object_id

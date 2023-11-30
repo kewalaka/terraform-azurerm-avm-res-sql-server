@@ -19,13 +19,13 @@ variable "azuread_administrator" {
   description = "Azure AD Administrator Configuration"
 
   type = object({
-    login_username              = optional(string)
-    object_id                   = optional(string)
+    login_username              = optional(string, null)
+    object_id                   = optional(string, null)
     tenant_id                   = optional(string)
     azuread_authentication_only = optional(bool)
   })
 
-  default = {}
+  default = null
 }
 
 variable "public_network_access_enabled" {
