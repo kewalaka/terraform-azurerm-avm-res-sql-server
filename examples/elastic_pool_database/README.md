@@ -73,7 +73,7 @@ locals {
     sample_database = {
       create_mode     = "Default"
       collation       = "SQL_Latin1_General_CP1_CI_AS"
-      elastic_pool_id = module.sql_server.resource.elastic_pools["sample_pool"].id
+      elastic_pool_id = module.sql_server.resource.resource_elasticpools["sample_pool"].id
       license_type    = "LicenseIncluded"
       max_size_gb     = 50
       sku_name        = "S0"
