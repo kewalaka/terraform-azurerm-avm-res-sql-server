@@ -418,6 +418,14 @@ Description: A map of private endpoints. The map key is the supplied input to va
 
 Description: This is the full output for the resource.
 
+### <a name="output_resource_databases"></a> [resource\_databases](#output\_resource\_databases)
+
+Description: A map of databases. The map key is the supplied input to var.databases. The map value is the entire azurerm\_mssql\_database resource.
+
+### <a name="output_resource_elasticpools"></a> [resource\_elasticpools](#output\_resource\_elasticpools)
+
+Description: A map of elastic pools. The map key is the supplied input to var.elastic\_pools. The map value is the entire azurerm\_mssql\_elasticpool resource.
+
 ## Modules
 
 No modules.
