@@ -28,36 +28,36 @@ resource "azurerm_mssql_database" "this" {
   dynamic "threat_detection_policy" {
     for_each = each.value.threat_detection_policy != null ? { this = each.value.threat_detection_policy } : {}
     content {
-      state                      = threat_detection_policy.value.state
-      disabled_alerts            = threat_detection_policy.value.disabled_alerts
-      email_account_admins       = threat_detection_policy.value.email_account_admins
-      email_addresses            = threat_detection_policy.value.email_addresses
-      retention_days             = threat_detection_policy.value.retention_days
-      storage_account_access_key = threat_detection_policy.value.storage_account_access_key
-      storage_endpoint           = threat_detection_policy.value.storage_endpoint
+      state                      = each.value.threat_detection_policy.value.state
+      disabled_alerts            = each.value.threat_detection_policy.value.disabled_alerts
+      email_account_admins       = each.value.threat_detection_policy.value.email_account_admins
+      email_addresses            = each.value.threat_detection_policy.value.email_addresses
+      retention_days             = each.value.threat_detection_policy.value.retention_days
+      storage_account_access_key = each.value.threat_detection_policy.value.storage_account_access_key
+      storage_endpoint           = each.value.threat_detection_policy.value.storage_endpoint
     }
   }
 
   dynamic "import" {
     for_each = each.value.import != null ? { this = each.value.import } : {}
     content {
-      storage_uri                  = import.storage_uri
-      storage_key                  = import.storage_key
-      storage_key_type             = import.storage_key_type
-      administrator_login          = import.administrator_login
-      administrator_login_password = import.administrator_login_password
-      authentication_type          = import.authentication_type
-      storage_account_id           = import.storage_account_id
+      storage_uri                  = each.value.import.storage_uri
+      storage_key                  = each.value.import.storage_key
+      storage_key_type             = each.value.import.storage_key_type
+      administrator_login          = each.value.import.administrator_login
+      administrator_login_password = each.value.import.administrator_login_password
+      authentication_type          = each.value.import.authentication_type
+      storage_account_id           = each.value.import.storage_account_id
     }
   }
 
   dynamic "long_term_retention_policy" {
     for_each = each.value.long_term_retention_policy != null ? { this = each.value.long_term_retention_policy } : {}
     content {
-      weekly_retention  = long_term_retention_policy.weekly_retention
-      monthly_retention = long_term_retention_policy.monthly_retention
-      yearly_retention  = long_term_retention_policy.yearly_retention
-      week_of_year      = long_term_retention_policy.week_of_year
+      weekly_retention  = each.value.long_term_retention_policy.weekly_retention
+      monthly_retention = each.value.long_term_retention_policy.monthly_retention
+      yearly_retention  = each.value.long_term_retention_policy.yearly_retention
+      week_of_year      = each.value.long_term_retention_policy.week_of_year
     }
   }
 
