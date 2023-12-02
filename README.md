@@ -29,6 +29,7 @@ The following providers are used by this module:
 The following resources are used by this module:
 
 - [azurerm_management_lock.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/management_lock) (resource)
+- [azurerm_mssql_database.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mssql_database) (resource)
 - [azurerm_mssql_elasticpool.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mssql_elasticpool) (resource)
 - [azurerm_mssql_server.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mssql_server) (resource)
 - [azurerm_private_endpoint.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_endpoint) (resource)
@@ -96,20 +97,87 @@ Type: `string`
 
 Default: `"Default"`
 
+### <a name="input_databases"></a> [databases](#input\_databases)
+
+Description: Map of databases.
+
+Type:
+
+```hcl
+map(object({
+    auto_pause_delay_in_minutes         = optional(number)
+    create_mode                         = optional(string, "Default")
+    collation                           = optional(string)
+    elastic_pool_id                     = optional(string)
+    geo_backup_enabled                  = optional(bool, true)
+    maintenance_configuration_name      = optional(string, "SQL_Default")
+    ledger_enabled                      = optional(bool, false)
+    license_type                        = optional(string)
+    max_size_gb                         = optional(number)
+    min_capacity                        = optional(number)
+    restore_point_in_time               = optional(string)
+    recover_database_id                 = optional(string)
+    restore_dropped_database_id         = optional(string)
+    read_replica_count                  = optional(number)
+    read_scale                          = optional(bool)
+    sample_name                         = optional(string)
+    sku_name                            = optional(string)
+    storage_account_type                = optional(string, "Geo")
+    transparent_data_encryption_enabled = optional(bool, true)
+    zone_redundant                      = optional(bool)
+
+    import = optional(object({
+      storage_uri            = string
+      storage_key            = string
+      storage_key_type       = string
+      administrator_login    = string
+      administrator_password = string
+      authentication_type    = string
+      storage_account_id     = optional(string)
+    }))
+
+    long_term_retention_policy = optional(object({
+      weekly_retention  = string
+      monthly_retention = string
+      yearly_retention  = string
+      week_of_year      = number
+    }))
+
+    short_term_retention_policy = object({
+      retention_days           = number
+      backup_interval_in_hours = optional(number, 12)
+    })
+
+    threat_detection_policy = optional(object({
+      state                      = optional(string, "Disabled")
+      disabled_alerts            = optional(list(string))
+      email_account_admins       = optional(string, "Disabled")
+      email_addresses            = optional(list(string))
+      retention_days             = optional(number)
+      storage_account_access_key = optional(string)
+      storage_endpoint           = optional(string)
+    }))
+
+    tags = optional(map(string))
+  }))
+```
+
+Default: `{}`
+
 ### <a name="input_diagnostic_settings"></a> [diagnostic\_settings](#input\_diagnostic\_settings)
 
-Description:   A map of diagnostic settings to create on the Key Vault. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
+Description: A map of diagnostic settings to create on the Key Vault. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
 
-  - `name` - (Optional) The name of the diagnostic setting. One will be generated if not set, however this will not be unique if you want to create multiple diagnostic setting resources.
-  - `log_categories` - (Optional) A set of log categories to send to the log analytics workspace. Defaults to `[]`.
-  - `log_groups` - (Optional) A set of log groups to send to the log analytics workspace. Defaults to `["allLogs"]`.
-  - `metric_categories` - (Optional) A set of metric categories to send to the log analytics workspace. Defaults to `["AllMetrics"]`.
-  - `log_analytics_destination_type` - (Optional) The destination type for the diagnostic setting. Possible values are `Dedicated` and `AzureDiagnostics`. Defaults to `Dedicated`.
-  - `workspace_resource_id` - (Optional) The resource ID of the log analytics workspace to send logs and metrics to.
-  - `storage_account_resource_id` - (Optional) The resource ID of the storage account to send logs and metrics to.
-  - `event_hub_authorization_rule_resource_id` - (Optional) The resource ID of the event hub authorization rule to send logs and metrics to.
-  - `event_hub_name` - (Optional) The name of the event hub. If none is specified, the default event hub will be selected.
-  - `marketplace_partner_resource_id` - (Optional) The full ARM resource ID of the Marketplace resource to which you would like to send Diagnostic LogsLogs.
+- `name` - (Optional) The name of the diagnostic setting. One will be generated if not set, however this will not be unique if you want to create multiple diagnostic setting resources.
+- `log_categories` - (Optional) A set of log categories to send to the log analytics workspace. Defaults to `[]`.
+- `log_groups` - (Optional) A set of log groups to send to the log analytics workspace. Defaults to `["allLogs"]`.
+- `metric_categories` - (Optional) A set of metric categories to send to the log analytics workspace. Defaults to `["AllMetrics"]`.
+- `log_analytics_destination_type` - (Optional) The destination type for the diagnostic setting. Possible values are `Dedicated` and `AzureDiagnostics`. Defaults to `Dedicated`.
+- `workspace_resource_id` - (Optional) The resource ID of the log analytics workspace to send logs and metrics to.
+- `storage_account_resource_id` - (Optional) The resource ID of the storage account to send logs and metrics to.
+- `event_hub_authorization_rule_resource_id` - (Optional) The resource ID of the event hub authorization rule to send logs and metrics to.
+- `event_hub_name` - (Optional) The name of the event hub. If none is specified, the default event hub will be selected.
+- `marketplace_partner_resource_id` - (Optional) The full ARM resource ID of the Marketplace resource to which you would like to send Diagnostic LogsLogs.
 
 Type:
 
@@ -160,7 +228,7 @@ Default: `{}`
 ### <a name="input_enable_telemetry"></a> [enable\_telemetry](#input\_enable\_telemetry)
 
 Description: This variable controls whether or not telemetry is enabled for the module.  
-For more information see https://aka.ms/avm/telemetryinfo.  
+For more information see <https://aka.ms/avm/telemetryinfo>.  
 If it is set to false, then no telemetry will be collected.
 
 Type: `bool`
