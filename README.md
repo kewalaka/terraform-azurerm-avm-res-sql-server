@@ -110,7 +110,7 @@ map(object({
     collation                           = optional(string)
     elastic_pool_id                     = optional(string)
     geo_backup_enabled                  = optional(bool, true)
-    maintenance_configuration_name      = optional(string, "SQL_Default")
+    maintenance_configuration_name      = optional(string)
     ledger_enabled                      = optional(bool, false)
     license_type                        = optional(string)
     max_size_gb                         = optional(number)

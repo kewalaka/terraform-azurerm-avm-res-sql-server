@@ -7,7 +7,7 @@ variable "databases" {
     collation                           = optional(string)
     elastic_pool_id                     = optional(string)
     geo_backup_enabled                  = optional(bool, true)
-    maintenance_configuration_name      = optional(string, "SQL_Default")
+    maintenance_configuration_name      = optional(string)
     ledger_enabled                      = optional(bool, false)
     license_type                        = optional(string)
     max_size_gb                         = optional(number)
@@ -62,7 +62,7 @@ variable "databases" {
   validation {
     condition = can([
       for database, config in var.databases : (
-        config.create_mode == null || contains([
+        config.create_mode == null ? true : contains([
           "Copy", "Default", "OnlineSecondary", "PointInTimeRestore", "Recovery", "Restore", "RestoreExternalBackup",
           "RestoreExternalBackupSecondary", "RestoreLongTermRetentionBackup", "Secondary"
         ], config.create_mode)
@@ -74,7 +74,7 @@ variable "databases" {
   validation {
     condition = can([
       for database, config in var.databases : (
-        config.maintenance_configuration_name == null || contains([
+        config.maintenance_configuration_name == null ? true : contains([
           "SQL_Default",
           "SQL_AustraliaEast_DB_1", "SQL_AustraliaEast_DB_2", "SQL_AustraliaSoutheast_DB_1", "SQL_AustraliaSoutheast_DB_2",
           "SQL_BrazilSoutheast_DB_1", "SQL_BrazilSoutheast_DB_2", "SQL_BrazilSouth_DB_1", "SQL_BrazilSouth_DB_2",

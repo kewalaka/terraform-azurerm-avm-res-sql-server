@@ -68,4 +68,11 @@ resource "azurerm_mssql_database" "this" {
       backup_interval_in_hours = each.value.short_term_retention_policy.backup_interval_in_hours
     }
   }
+
+  lifecycle {
+    precondition {
+      condition     = each.value.elastic_pool_id == null || each.value.elastic_pool_id != null && each.value.maintenance_configuration_name == null
+      error_message = "When creating a database resource with an elastic_pool_id, the maintenance_configuration_name is not supported at the database scope.  Set this on the elastic pool instead."
+    }
+  }
 }
