@@ -70,7 +70,7 @@ locals {
       elastic_pool_id = module.sql_server.resource_elasticpools["sample_pool"].id
       license_type    = "LicenseIncluded"
       max_size_gb     = 50
-      sku_name        = "S0"
+      sku_name        = "ElasticPool"
 
       short_term_retention_policy = {
         retention_days           = 1
