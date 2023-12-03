@@ -2,7 +2,7 @@ resource "azurerm_mssql_database" "this" {
   for_each = var.databases
 
   name                                = each.key
-  server_id                           = azurerm_mssql_server.this.id
+  server_id                           = try(data.azurerm_mssql_server.this[0].id, azurerm_mssql_server.this[0].id)
   auto_pause_delay_in_minutes         = each.value.auto_pause_delay_in_minutes
   create_mode                         = each.value.create_mode
   collation                           = each.value.collation

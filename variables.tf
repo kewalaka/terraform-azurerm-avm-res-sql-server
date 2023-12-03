@@ -24,9 +24,18 @@ variable "name" {
   type        = string
   description = "The name of the this resource."
   validation {
-    condition     = can(regex("^[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$", var.name))
+    condition     = var.name == null ? true : can(regex("^[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$", var.name))
     error_message = "The name must be between 2 and 63 characters long, must start and end with a lowercase letter or number, and can container lowercase letters, numbers and hyphens."
   }
+  default = null
+}
+
+variable "existing_parent_resource" {
+  description = "If supplied, this SQL Server will be used by parent resources, instead of creating a new SQL Server"
+  type = object({
+    name = string
+  })
+  default = null
 }
 
 // required AVM interfaces 
