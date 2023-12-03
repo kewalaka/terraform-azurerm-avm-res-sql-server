@@ -108,5 +108,14 @@ variable "databases" {
     error_message = "Invalid value for sku_name. Allowed values are Basic, BC_Gen5_2, DS100, DW100c, ElasticPool, GP_S_Gen5_2, HS_Gen4_1, P2, S0, ... (add more as needed)."
   }
 
+  validation {
+    condition = can([
+      for database, config in var.databases : (
+        config.long_term_retention_policy == null ? true : config.long_term_retention_policy.weekly_retention == null ? true : regex("^P(?:\\d+Y)?(?:\\d+M)?(?:\\d+W)?(?:\\d+D)?$", config.long_term_retention_policy.weekly_retention)
+      )
+    ])
+    error_message = "'long_term_retention_policy.weekly_retention' should be in ISO 8601 format (e.g., P1Y, P1M, P1W, or P7D)."
+  }
+
   default = {}
 }

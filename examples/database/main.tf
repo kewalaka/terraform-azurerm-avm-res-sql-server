@@ -65,9 +65,9 @@ locals {
       }
 
       long_term_retention_policy = {
-        weekly_retention  = 2
-        monthly_retention = 2
-        yearly_retention  = 1
+        weekly_retention  = "P2W1D"
+        monthly_retention = "P2M"
+        yearly_retention  = "P1Y"
         week_of_year      = 1
       }
 
