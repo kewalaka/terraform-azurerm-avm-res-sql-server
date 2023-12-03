@@ -7,8 +7,8 @@ This module is for the Azure SQL database.  Managed instances & SQL VMs will be 
 | [default](./default/) | Create a mssql server using the default parameters in this module.
 | [database](./database/) | Create a mssql server and a single database.
 | [database_with_existing_server](./database_with_existing_server/) | Bring your existing mssql server and add a database.
-| [elastic_pool](./elastic_pool/) | Create a mssql server and one elastic pool.
-| [elastic_pool_database](./elastic_pool_database/) | Same as elastic pool, illustrating how to add a database to the pool.
+| [elastic_pool_database](./elastic_pool_database/) | Create a mssql server, one elastic pool & an associated database.
+| [private_endpoint](./private_endpoint/) | SQL Server with private endpoint.
 
 ## Contributing new examples
 
