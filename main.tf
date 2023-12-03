@@ -13,7 +13,7 @@ resource "azurerm_mssql_server" "this" {
   count                        = var.existing_parent_resource == null ? 1 : 0
   name                         = var.name # calling code must supply the name
   resource_group_name          = var.resource_group_name
-  location                     = coalesce(var.location, data.azurerm_resource_group.parent[0].location)
+  location                     = try(data.azurerm_resource_group.parent[0].location, var.location)
   version                      = var.server_version
   administrator_login          = var.administrator_login
   administrator_login_password = var.administrator_login_password
