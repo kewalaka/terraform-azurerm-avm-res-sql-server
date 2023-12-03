@@ -1,7 +1,7 @@
 <!-- BEGIN_TF_DOCS -->
-# SQL Elastic Pool with database
+# SQL Server and Database
 
-This illustrates how to deploy a database on an Elastic SQL Pool.
+This illustrates how to deploy a SQL Server with a database.
 
 ```hcl
 terraform {
@@ -51,37 +51,33 @@ resource "random_password" "admin_password" {
 }
 
 locals {
-  elastic_pools = {
-    sample_pool = {
-      sku = {
-        name     = "StandardPool"
-        capacity = 50
-        tier     = "Standard"
-      }
-      per_database_settings = {
-        min_capacity = 50
-        max_capacity = 50
-      }
-      maintenance_configuration_name = "SQL_Default"
-      zone_redundant                 = false
-      license_type                   = "LicenseIncluded"
-      max_size_gb                    = 50
-    }
+  tags = {
+    environment = "sample"
+    cost_centre = "demo"
   }
 
   databases = {
-    sample_database = {
-      create_mode     = "Default"
-      collation       = "SQL_Latin1_General_CP1_CI_AS"
-      elastic_pool_id = module.sql_server.resource_elasticpools["sample_pool"].id
-      license_type    = "LicenseIncluded"
-      max_size_gb     = 50
-      sku_name        = "ElasticPool"
+    my_sample_db = {
+      create_mode  = "Default"
+      collation    = "SQL_Latin1_General_CP1_CI_AS"
+      server_id    = module.sql_server.resource.id
+      license_type = "LicenseIncluded"
+      max_size_gb  = 50
+      sku_name     = "S0"
 
       short_term_retention_policy = {
         retention_days           = 1
         backup_interval_in_hours = 24
       }
+
+      long_term_retention_policy = {
+        weekly_retention  = "P2W1D"
+        monthly_retention = "P2M"
+        yearly_retention  = "P1Y"
+        week_of_year      = 1
+      }
+
+      tags = local.tags
     }
   }
 }
@@ -97,8 +93,9 @@ module "sql_server" {
   administrator_login          = "mysqladmin"
   administrator_login_password = random_password.admin_password.result
 
-  databases     = local.databases
-  elastic_pools = local.elastic_pools
+  databases = local.databases
+
+  tags = local.tags
 }
 ```
 

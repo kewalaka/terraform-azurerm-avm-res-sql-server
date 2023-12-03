@@ -1,7 +1,7 @@
 <!-- BEGIN_TF_DOCS -->
-# SQL Elastic Pool with database
+# SQL Server and Database
 
-This illustrates how to deploy a database on an Elastic SQL Pool.
+This illustrates how to deploy a SQL Server with a database.
 
 ```hcl
 terraform {
@@ -51,32 +51,14 @@ resource "random_password" "admin_password" {
 }
 
 locals {
-  elastic_pools = {
-    sample_pool = {
-      sku = {
-        name     = "StandardPool"
-        capacity = 50
-        tier     = "Standard"
-      }
-      per_database_settings = {
-        min_capacity = 50
-        max_capacity = 50
-      }
-      maintenance_configuration_name = "SQL_Default"
-      zone_redundant                 = false
-      license_type                   = "LicenseIncluded"
-      max_size_gb                    = 50
-    }
-  }
-
   databases = {
-    sample_database = {
-      create_mode     = "Default"
-      collation       = "SQL_Latin1_General_CP1_CI_AS"
-      elastic_pool_id = module.sql_server.resource_elasticpools["sample_pool"].id
-      license_type    = "LicenseIncluded"
-      max_size_gb     = 50
-      sku_name        = "ElasticPool"
+    my_db = {
+      create_mode  = "Default"
+      collation    = "SQL_Latin1_General_CP1_CI_AS"
+      server_id    = module.sql_server.resource.id
+      license_type = "LicenseIncluded"
+      max_size_gb  = 50
+      sku_name     = "S0"
 
       short_term_retention_policy = {
         retention_days           = 1
@@ -86,19 +68,27 @@ locals {
   }
 }
 
+resource "azurerm_mssql_server" "this" {
+  name                         = module.naming.sql_server.name_unique
+  resource_group_name          = azurerm_resource_group.this.name
+  location                     = azurerm_resource_group.this.location
+  version                      = "12.0"
+  administrator_login          = "mysqladmin"
+  administrator_login_password = random_password.admin_password.result
+}
+
 # This is the module call
 module "sql_server" {
   source = "../../"
-  # source             = "Azure/avm-<res/ptn>-<name>/azurerm"
-  # ...
+  # source             = "Azure/avm-res-sql-server/azurerm"
+
   enable_telemetry             = var.enable_telemetry
-  name                         = module.naming.sql_server.name_unique
+  existing_parent_resource     = { name = azurerm_mssql_server.this.name }
   resource_group_name          = azurerm_resource_group.this.name
   administrator_login          = "mysqladmin"
   administrator_login_password = random_password.admin_password.result
 
-  databases     = local.databases
-  elastic_pools = local.elastic_pools
+  databases = local.databases
 }
 ```
 
@@ -125,6 +115,7 @@ The following providers are used by this module:
 
 The following resources are used by this module:
 
+- [azurerm_mssql_server.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mssql_server) (resource)
 - [azurerm_resource_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) (resource)
 - [random_password.admin_password](https://registry.terraform.io/providers/hashicorp/random/3.5.1/docs/resources/password) (resource)
 
