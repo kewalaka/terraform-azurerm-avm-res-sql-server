@@ -1,7 +1,7 @@
 <!-- BEGIN_TF_DOCS -->
 # SQL Server and Database
 
-This illustrates how to deploy a SQL Server with a database.
+This illustrates how to use an existing SQL Server (i.e. an existing `azurerm_mssql_server` resource) and create a database with this module.
 
 ```hcl
 terraform {
