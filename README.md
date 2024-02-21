@@ -32,6 +32,7 @@ The following resources are used by this module:
 - [azurerm_management_lock.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/management_lock) (resource)
 - [azurerm_mssql_database.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mssql_database) (resource)
 - [azurerm_mssql_elasticpool.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mssql_elasticpool) (resource)
+- [azurerm_mssql_firewall_rule.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mssql_firewall_rule) (resource)
 - [azurerm_mssql_server.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mssql_server) (resource)
 - [azurerm_private_endpoint.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_endpoint) (resource)
 - [azurerm_private_endpoint_application_security_group_association.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_endpoint_application_security_group_association) (resource)
@@ -244,6 +245,35 @@ object({
 ```
 
 Default: `null`
+
+### <a name="input_firewall_rules"></a> [firewall\_rules](#input\_firewall\_rules)
+
+Description: - `end_ip_address` - (Required) Specifies the End IP Address associated with this Firewall Rule.
+- `start_ip_address` - (Required) Specifies the Start IP Address associated with this Firewall Rule.
+
+---
+`timeouts` block supports the following:
+- `create` - (Defaults to 30 minutes) Used when creating the MySQL Firewall Rule.
+- `delete` - (Defaults to 30 minutes) Used when deleting the MySQL Firewall Rule.
+- `read` - (Defaults to 5 minutes) Used when retrieving the MySQL Firewall Rule.
+- `update` - (Defaults to 30 minutes) Used when updating the MySQL Firewall Rule.
+
+Type:
+
+```hcl
+map(object({
+    end_ip_address   = string
+    start_ip_address = string
+    timeouts = optional(object({
+      create = optional(string)
+      delete = optional(string)
+      read   = optional(string)
+      update = optional(string)
+    }))
+  }))
+```
+
+Default: `{}`
 
 ### <a name="input_location"></a> [location](#input\_location)
 
